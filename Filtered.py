@@ -4,9 +4,9 @@ from scipy.signal import butter, filtfilt
 import os
 
 
-def highpass_filter(data, cutoff, fs, order=5):
+def lowpass_filter(data, cutoff, fs, order=5):
     """
-    Zastosuj filtr górnozaporowy do sygnału audio.
+    Zastosuj filtr dolnoprzepustowy do sygnału audio.
 
     Parameters:
         data (np.ndarray): Tablica z danymi audio.
@@ -19,7 +19,7 @@ def highpass_filter(data, cutoff, fs, order=5):
     """
     nyquist = 0.5 * fs  # Częstotliwość Nyquista
     normal_cutoff = cutoff / nyquist  # Znormalizowana częstotliwość odcięcia
-    b, a = butter(order, normal_cutoff, btype='high', analog=False)  # Współczynniki filtra
+    b, a = butter(order, normal_cutoff, btype='low', analog=False)  # Współczynniki filtra
     filtered_data = filtfilt(b, a, data)  # Przefiltrowany sygnał
     return filtered_data
 
@@ -39,12 +39,12 @@ def main():
         data = data.mean(axis=1)
 
     # Parametry filtra
-    cutoff = float(input("Podaj częstotliwość odcięcia filtra (Hz): ").strip())
+    cutoff = float(input("Podaj częstotliwość odcięcia filtra (Hz) (np. 15000): ").strip())
     order = int(input("Podaj rząd filtra (np. 5): ").strip())
 
     # Przefiltruj dane
-    print("Nakładam filtr górnozaporowy...")
-    filtered_data = highpass_filter(data, cutoff, samplerate, order)
+    print("Nakładam filtr dolnoprzepustowy...")
+    filtered_data = lowpass_filter(data, cutoff, samplerate, order)
 
     # Zapisz wynik do nowego pliku
     output_file = "filtered_" + os.path.basename(input_file)
